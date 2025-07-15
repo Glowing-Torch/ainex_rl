@@ -45,7 +45,7 @@ class XBotLCfg(LeggedRobotCfg):
         # num_privileged_obs = int(c_frame_stack * single_num_privileged_obs)
         num_privileged_obs = 72
         num_actions = 12
-        num_envs = 4096
+        num_envs = 10
         episode_length_s = 24     # episode length in seconds
         use_ref_actions = False   # speed up training by using reference actions
 

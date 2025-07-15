@@ -483,7 +483,7 @@
     </collision>
   </link>
   <joint name="r_sho_pitch" type="fixed">
-    <origin rpy="1 0 0" xyz="-5.46273713767254E-05 -0.0524909514103703 0.0874480463620076"/>
+    <origin rpy="0 0 0" xyz="-5.46273713767254E-05 -0.0524909514103703 0.0874480463620076"/>
     <parent link="body_link"/>
     <child link="r_sho_pitch_link"/>
     <axis xyz="0 -1 0"/>
@@ -511,7 +511,7 @@
     </collision>
   </link>
   <joint name="r_sho_roll" type="fixed">
-    <origin rpy="0 0 0" xyz="0.020003499818653 -0.021505961295104 0"/>
+    <origin rpy="1.57 0 0" xyz="0.020003499818653 -0.021505961295104 0"/>
     <parent link="r_sho_pitch_link"/>
     <child link="r_sho_roll_link"/>
     <axis xyz="1 0 0"/>
@@ -623,7 +623,7 @@
     </collision>
   </link>
   <joint name="l_sho_pitch" type="fixed">
-    <origin rpy="-1 0 0" xyz="-5.4627E-05 0.052491 0.087448"/>
+    <origin rpy="0 0 0" xyz="-5.4627E-05 0.052491 0.087448"/>
     <parent link="body_link"/>
     <child link="l_sho_pitch_link"/>
     <axis xyz="0 -1 0"/>
@@ -651,7 +651,7 @@
     </collision>
   </link>
   <joint name="l_sho_roll" type="fixed">
-    <origin rpy="0 0 0" xyz="0.020003 0.021507 0"/>
+    <origin rpy="-1.57 0 0" xyz="0.020003 0.021507 0"/>
     <parent link="l_sho_pitch_link"/>
     <child link="l_sho_roll_link"/>
     <axis xyz="1 0 0"/>
