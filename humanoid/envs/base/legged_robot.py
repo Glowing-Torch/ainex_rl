@@ -134,7 +134,7 @@ class LeggedRobot(BaseTask):
         self.base_ang_vel[:] = quat_rotate_inverse(self.base_quat, self.root_states[:, 10:13])
         self.projected_gravity[:] = quat_rotate_inverse(self.base_quat, self.gravity_vec)
         self.base_euler_xyz = get_euler_xyz_tensor(self.base_quat)
-
+        # print("base lin vel", self.base_lin_vel)
         self._post_physics_step_callback()
 
         # compute observations, rewards, resets, ...
@@ -359,9 +359,11 @@ class LeggedRobot(BaseTask):
         """
         # pd controller
         actions_scaled = actions * self.cfg.control.action_scale
+        # print("actions_scaled", actions_scaled)
         p_gains = self.p_gains
         d_gains = self.d_gains
         torques = p_gains * (actions_scaled + self.default_dof_pos - self.dof_pos) - d_gains * self.dof_vel
+        # print("torques", torch.clip(torques, -self.torque_limits, self.torque_limits))
         return torch.clip(torques, -self.torque_limits, self.torque_limits)
 
     
@@ -493,9 +495,10 @@ class LeggedRobot(BaseTask):
 
         # joint positions offsets and PD gains
         self.default_dof_pos = torch.zeros(self.num_dof, dtype=torch.float, device=self.device, requires_grad=False)
+        print(self.dof_names)
         for i in range(self.num_dofs):
             name = self.dof_names[i]
-            print(name)
+            # print(name)
             self.default_dof_pos[i] = self.cfg.init_state.default_joint_angles[name]
             found = False
             for dof_name in self.cfg.control.stiffness.keys():
@@ -659,7 +662,7 @@ class LeggedRobot(BaseTask):
             # create env instance
             env_handle = self.gym.create_env(self.sim, env_lower, env_upper, int(np.sqrt(self.num_envs)))
             pos = self.env_origins[i].clone()
-            pos[:2] += torch_rand_float(-1., 1., (2,1), device=self.device).squeeze(1)
+            pos[:2] += torch_rand_float(0., 1., (2,1), device=self.device).squeeze(1)
             start_pose.p = gymapi.Vec3(*pos)
             
             rigid_shape_props = self._process_rigid_shape_props(rigid_shape_props_asset, i)

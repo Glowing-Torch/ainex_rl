@@ -79,7 +79,6 @@ class XBotLFreeEnv(LeggedRobot):
         self.feet_height = torch.zeros((self.num_envs, 2), device=self.device)
         self.reset_idx(torch.tensor(range(self.num_envs), device=self.device))
         self.compute_observations()
-
     def _push_robots(self):
         """ Random pushes the robots. Emulates an impulse by setting a randomized base velocity. 
         """
@@ -204,13 +203,13 @@ class XBotLFreeEnv(LeggedRobot):
 
         sin_pos = torch.sin(2 * torch.pi * phase).unsqueeze(1)
         cos_pos = torch.cos(2 * torch.pi * phase).unsqueeze(1)
-
+        # print("cos", cos_pos)
         stance_mask = self._get_gait_phase()
         contact_mask = self.contact_forces[:, self.feet_indices, 2] > 5.
 
         self.command_input = torch.cat(
-            (sin_pos, cos_pos, self.commands[:, :2] * self.commands_scale[:2]), dim=1)
-        
+            (sin_pos, cos_pos, self.commands[:, :3] * self.commands_scale), dim=1)
+
         q = (self.dof_pos - self.default_dof_pos) * self.obs_scales.dof_pos
         dq = self.dof_vel * self.obs_scales.dof_vel
         
@@ -242,7 +241,14 @@ class XBotLFreeEnv(LeggedRobot):
             self.base_ang_vel * self.obs_scales.ang_vel,  # 3
             self.base_euler_xyz * self.obs_scales.quat,  # 3
         ), dim=-1)
-
+        if 1:
+            # print()
+            print("action", self.actions[0])
+            self.flag=0
+        # print("command_input", self.command_input[0])
+        # print("ang_vel", self.base_ang_vel[0])
+        # print("euler_xyz", self.base_euler_xyz[0])
+        # print("obs_buf", obs_buf[0])
         if self.cfg.terrain.measure_heights:
             heights = torch.clip(self.root_states[:, 2].unsqueeze(1) - 0.5 - self.measured_heights, -1, 1.) * self.obs_scales.height_measurements
             self.privileged_obs_buf = torch.cat((self.obs_buf, heights), dim=-1)
@@ -258,10 +264,8 @@ class XBotLFreeEnv(LeggedRobot):
         obs_buf_all = torch.stack([self.obs_history[i]
                                    for i in range(self.obs_history.maxlen)], dim=1)  # N,T,K
 
-        # self.obs_buf = obs_buf_all.reshape(self.num_envs, -1)  # N, T*K
-        self.obs_buf =obs_buf
-        # self.privileged_obs_buf = torch.cat([self.critic_history[i] for i in range(self.cfg.env.c_frame_stack)], dim=1)
-        
+        self.obs_buf = obs_buf_all.reshape(self.num_envs, -1)  # N, T*K
+        self.privileged_obs_buf = torch.cat([self.critic_history[i] for i in range(self.cfg.env.c_frame_stack)], dim=1)
     def reset_idx(self, env_ids):
         super().reset_idx(env_ids)
         for i in range(self.obs_history.maxlen):
@@ -366,11 +370,13 @@ class XBotLFreeEnv(LeggedRobot):
         on penalizing deviation in yaw and roll directions. Excludes yaw and roll from the main penalty.
         """
         joint_diff = self.dof_pos - self.default_joint_pd_target
+        # print("joint_diff", joint_diff)
         left_yaw_roll = joint_diff[:, :2]
         right_yaw_roll = joint_diff[:, 6: 8]
         yaw_roll = torch.norm(left_yaw_roll, dim=1) + torch.norm(right_yaw_roll, dim=1)
-        yaw_roll = torch.clamp(yaw_roll - 0.1, 0, 50)
-        return torch.exp(-yaw_roll * 100) - 0.01 * torch.norm(joint_diff, dim=1)
+        # yaw_roll = torch.clamp(yaw_roll - 0.1, 0, 50)
+        # return torch.exp(-yaw_roll * 100) - 0.01 * torch.norm(joint_diff, dim=1)
+        return torch.exp(-yaw_roll * 5)
 
     def _reward_base_height(self):
         """
@@ -450,10 +456,10 @@ class XBotLFreeEnv(LeggedRobot):
         Encourages appropriate lift of the feet during the swing phase of the gait.
         """
         # Compute feet contact mask
-        contact = self.contact_forces[:, self.feet_indices, 2] > 5.
+        contact = self.contact_forces[:, self.feet_indices, 2] > 1.
 
         # Get the z-position of the feet and compute the change in z-position
-        feet_z = self.rigid_state[:, self.feet_indices, 2] - 0.05
+        feet_z = self.rigid_state[:, self.feet_indices, 2] 
         delta_z = feet_z - self.last_feet_z
         self.feet_height += delta_z
         self.last_feet_z = feet_z

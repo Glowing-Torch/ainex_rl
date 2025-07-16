@@ -38,5 +38,4 @@ from .custom.humanoid_env import XBotLFreeEnv
 
 from humanoid.utils.task_registry import task_registry
 
-
 task_registry.register( "Ainex", XBotLFreeEnv, XBotLCfg(), XBotLCfgPPO() )

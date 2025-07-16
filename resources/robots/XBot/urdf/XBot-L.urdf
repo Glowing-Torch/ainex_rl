@@ -18,7 +18,14 @@
         ixz="-0.00027182"
         iyy="0.060002"
         iyz="-2.1263E-05"
-        izz="0.056135" />
+        izz="0.0561    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="../meshes/neck_base_link.STL" />
+      </geometry>35" />
     </inertial>
     <visual>
       <origin

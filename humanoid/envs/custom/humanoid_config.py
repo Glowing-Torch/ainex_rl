@@ -39,13 +39,12 @@ class XBotLCfg(LeggedRobotCfg):
         # change the observation dim
         frame_stack = 15
         c_frame_stack = 3
-        num_single_obs = 46
-        num_observations = 46
-        single_num_privileged_obs = 72
-        # num_privileged_obs = int(c_frame_stack * single_num_privileged_obs)
-        num_privileged_obs = 72
+        num_single_obs = 47
+        num_observations = int(frame_stack * num_single_obs)
+        single_num_privileged_obs = 73
+        num_privileged_obs = int(c_frame_stack * single_num_privileged_obs)
         num_actions = 12
-        num_envs = 10
+        num_envs = 4096
         episode_length_s = 24     # episode length in seconds
         use_ref_actions = False   # speed up training by using reference actions
 
@@ -122,10 +121,10 @@ class XBotLCfg(LeggedRobotCfg):
 
     class control(LeggedRobotCfg.control):
         # PD Drive parameters:
-        stiffness = {'hip_roll': 100.0, 'hip_pitch':200.0, 'hip_yaw': 100.0,
-                     'knee': 200.0, 'ank': 15}
-        damping = {'hip_roll': 10, 'hip_pitch': 10, 'hip_yaw':
-                   10, 'knee': 10, 'ank': 10}
+        stiffness = {'hip_roll': 6.0, 'hip_pitch':4.0, 'hip_yaw': 4.0,
+                     'knee': 4.0, 'ank': 2.0}
+        damping = {'hip_roll': 0.1, 'hip_pitch': 0.1, 'hip_yaw':
+                   0.1, 'knee': 0.1, 'ank': 0.1}
 
         # action scale: target angle = actionScale * action + defaultAngle
         action_scale = 0.25
@@ -171,15 +170,15 @@ class XBotLCfg(LeggedRobotCfg):
         heading_command = True  # if true: compute ang vel command from heading error
 
         class ranges:
-            lin_vel_x = [-0., 0.6]   # min max [m/s]
-            lin_vel_y = [-0., 0.6]   # min max [m/s]
-            ang_vel_yaw = [-0., 0.3] # min max [rad/s]
+            lin_vel_x = [-0.3, 0.6]   # min max [m/s]
+            lin_vel_y = [-0.3, 0.3]   # min max [m/s]
+            ang_vel_yaw = [-0.3, 0.3] # min max [rad/s]
             heading = [-3.14, 3.14]
 
     class rewards:
         base_height_target = 0.2
-        min_dist = 0.2
-        max_dist = 0.5
+        min_dist = 0.06
+        max_dist = 0.24
         # put some settings here for LLM parameter tuning
         target_joint_pos_scale = 0.17    # rad
         target_feet_height = 0.06        # m
@@ -191,28 +190,27 @@ class XBotLCfg(LeggedRobotCfg):
         max_contact_force = 50  # Forces above this value are penalized
 
         class scales:
-            # reference motion tracking
-            # joint_pos = 1.6
+            joint_pos = 1.6
             feet_clearance = 1.
             feet_contact_number = 1.2
             # gait
             feet_air_time = 1.
-            # foot_slip = -0.05
-            # feet_distance = 0.2
-            # knee_distance = 0.2
+            foot_slip = -0.05
+            feet_distance = 0.2
+            knee_distance = 0.2
             # contact
             feet_contact_forces = -0.01
             # vel tracking
-            tracking_lin_vel = 10
-            # tracking_ang_vel = 10
-            # vel_mismatch_exp = 0.5  # lin_z; ang x,y
-            # low_speed = 0.2
-            # track_vel_hard = 0.5
+            tracking_lin_vel = 1.2
+            tracking_ang_vel = 1.1
+            vel_mismatch_exp = 0.5  # lin_z; ang x,y
+            low_speed = 0.2
+            track_vel_hard = 0.5
             # base pos
             default_joint_pos = 0.5
             orientation = 1.
             # base_height = 0.2
-            # base_acc = 0.2
+            base_acc = 0.2
             # energy
             action_smoothness = -0.002
             torques = -1e-5
@@ -229,7 +227,7 @@ class XBotLCfg(LeggedRobotCfg):
             quat = 1.
             height_measurements = 5.0
         clip_observations = 18.
-        clip_actions = 8.
+        clip_actions = 10.
 
 
 class XBotLCfgPPO(LeggedRobotCfgPPO):

@@ -1,0 +1,195 @@
+<mujoco model="ainex">
+  <compiler angle="radian" meshdir="../meshes/" eulerseq="zyx" autolimits="true"/>
+  <!-- <option timestep='0.001' iterations='50' solver='PGS' gravity='0 0 -9.81'> -->
+    <!-- <flag sensornoise="enable" frictionloss="enable"/>
+  </option> -->
+  <size njmax="500" nconmax="100" />
+  <asset>
+    <material name="grid_mat" texture="grid" texrepeat="10 10" texuniform="true" rgba="1 1 1 1"/>
+    <texture name="grid" type="2d" builtin="checker" width="512" height="512" rgb1="0.8 0.8 0.8" rgb2="0.2 0.2 0.2"/>
+    <mesh name="body_link" file="body_link.STL"/>
+    <mesh name="r_hip_yaw_link" file="r_hip_yaw_link.STL"/>
+    <mesh name="r_hip_roll_link" file="r_hip_roll_link.STL"/>
+    <mesh name="r_hip_pitch_link" file="r_hip_pitch_link.STL"/>
+    <mesh name="r_knee_link" file="r_knee_link.STL"/>
+    <mesh name="r_ank_pitch_link" file="r_ank_pitch_link.STL"/>
+    <mesh name="r_ank_roll_link" file="r_ank_roll_link.STL"/>
+    <mesh name="l_hip_yaw_link" file="l_hip_yaw_link.STL"/>
+    <mesh name="l_hip_roll_link" file="l_hip_roll_link.STL"/>
+    <mesh name="l_hip_pitch_link" file="l_hip_pitch_link.STL"/>
+    <mesh name="l_knee_link" file="l_knee_link.STL"/>
+    <mesh name="l_ank_pitch_link" file="l_ank_pitch_link.STL"/>
+    <mesh name="l_ank_roll_link" file="l_ank_roll_link.STL"/>
+    <mesh name="head_pan_link" file="head_pan_link.STL"/>
+    <mesh name="head_tilt_link" file="head_tilt_link.STL"/>
+    <mesh name="r_sho_pitch_link" file="r_sho_pitch_link.STL"/>
+    <mesh name="r_sho_roll_link" file="r_sho_roll_link.STL"/>
+    <mesh name="r_el_pitch_link" file="r_el_pitch_link.STL"/>
+    <mesh name="r_el_yaw_link" file="r_el_yaw_link.STL"/>
+    <mesh name="r_gripper_link" file="r_gripper_link.STL"/>
+    <mesh name="l_sho_pitch_link" file="l_sho_pitch_link.STL"/>
+    <mesh name="l_sho_roll_link" file="l_sho_roll_link.STL"/>
+    <mesh name="l_el_pitch_link" file="l_el_pitch_link.STL"/>
+    <mesh name="l_el_yaw_link" file="l_el_yaw_link.STL"/>
+    <mesh name="l_gripper_link" file="l_gripper_link.STL"/>
+  </asset>
+  <default>
+      <joint limited='true'/>
+      <motor ctrllimited='true'/>
+      <!-- <geom  contype='0' conaffinity='0' /> -->
+      <default class='visualgeom'>
+          <geom material='visualgeom' condim='1' contype='0' conaffinity='0'/>
+      </default>
+  </default>
+  <worldbody>
+    <light directional="true" diffuse=".4 .4 .4" specular="0.1 0.1 0.1" pos="0 0 5.0" dir="0 0 -1" castshadow="false"/>
+    <light directional="true" diffuse=".6 .6 .6" specular="0.2 0.2 0.2" pos="0 0 4" dir="0 0 -1"/>
+    <geom name="floor" size="10 10 0.1" pos="0.0 0 -0.1" contype="1" conaffinity="1" type="plane" material="grid_mat"/>
+    <body name="base_link" pos="0 0 0.3" >
+      <!-- <freejoint/> -->
+      <inertial pos="0 0 0" mass="5" diaginertia="0.1 0.1 0.1" />
+      <geom type="mesh" mesh="body_link" rgba="0.1 0.1 0.1 1" contype="0" conaffinity="0" />
+      <site name='imu' size='0.01' pos='0.0 0 0.0'/>
+      <geom pos="-0.00410029 0 0.1078" quat="1 0 0 0" type="mesh" rgba="0.4 0.9 0.4 1" mesh="head_pan_link"/>
+      <geom pos="0.00494565 -0.0185734 0.135958" quat="1 0 0 0" type="mesh" rgba="0.4 0.9 0.4 1" mesh="head_tilt_link"/>
+      <geom pos="-5.46274e-05 -0.052491 0.087448" quat="1 0 0 0" type="mesh" rgba="0.4 0.9 0.4 1" mesh="r_sho_pitch_link"/>
+      <geom pos="0.0199489 -0.0739969 0.087448" quat="0.707388 0.706825 0 0" type="mesh" rgba="0.4 0.9 0.4 1" mesh="r_sho_roll_link"/>
+      <geom pos="-5.46274e-05 -0.0740559 0.0133381" quat="0.707388 0.706825 0 0" type="mesh" rgba="0.4 0.9 0.4 1" mesh="r_el_pitch_link"/>
+      <geom pos="0.000343186 -0.0931397 -0.00366499" quat="0.707388 0.706825 0 0" type="mesh" rgba="0.4 0.9 0.4 1" mesh="r_el_yaw_link"/>
+      <geom pos="0.0202334 -0.0741405 -0.0929157" quat="0.707388 0.706825 0 0" type="mesh" rgba="0.4 0.9 0.4 1" mesh="r_gripper_link"/>
+      <geom pos="-5.4627e-05 0.052491 0.087448" quat="1 0 0 0" type="mesh" rgba="0.4 0.9 0.4 1" mesh="l_sho_pitch_link"/>
+      <geom pos="0.0199484 0.073998 0.087448" quat="0.707388 -0.706825 0 0" type="mesh" rgba="0.4 0.9 0.4 1" mesh="l_sho_roll_link"/>
+      <geom pos="-5.4627e-05 0.074057 0.013339" quat="0.707388 -0.706825 0 0" type="mesh" rgba="0.4 0.9 0.4 1" mesh="l_el_pitch_link"/>
+      <geom pos="0.000340433 0.0931426 -0.00366478" quat="0.707388 -0.706825 0 0" type="mesh" rgba="0.4 0.9 0.4 1" mesh="l_el_yaw_link"/>
+      <geom pos="0.0202334 0.0741416 -0.0929119" quat="0.707388 -0.706825 0 0" type="mesh" rgba="0.4 0.9 0.4 1" mesh="l_gripper_link"/>
+      <body name="l_hip_yaw_link" pos="0 0.029 0">
+        <inertial pos="-3.11406e-05 -0.00125722 -0.0013713" quat="0.727661 -0.0116933 0.0358264 0.684901" mass="0.032" diaginertia="2.27801e-05 1.75528e-05 8.97707e-06"/>
+        <joint name="l_hip_yaw" pos="0 0 0" axis="0 0 -1" range="-2.09 2.09"  damping="0.02"/>
+        <geom type="mesh" rgba="0.4 0.9 0.4 1" mesh="l_hip_yaw_link"/>
+        <body name="l_hip_roll_link" pos="-0.01955 0 -0.0255">
+          <inertial pos="0.00136239 0.000566861 -0.0134187" quat="0.508887 0.501276 0.491474 0.498207" mass="0.12" diaginertia="7.31184e-05 6.05065e-05 2.91551e-05"/>
+          <joint name="l_hip_roll" pos="0 0 0" axis="-1 0 0" range="-2.09 2.09"  damping="0.02"/>
+          <geom type="mesh" rgba="0.4 0.9 0.4 1" mesh="l_hip_roll_link"/>
+          <body name="l_hip_pitch_link" pos="0.019037 0.02 0">
+            <inertial pos="0.0135944 -0.0193812 -0.0727051" quat="0.671181 0.0407745 0.0427036 0.738938" mass="0.1065" diaginertia="0.000112942 0.000111046 4.06518e-05"/>
+            <joint name="l_hip_pitch" pos="0 0 0" axis="0 1 0" range="-2.09 2.09"  damping="0.02"/>
+            <geom type="mesh" rgba="0.4 0.9 0.4 1" mesh="l_hip_pitch_link"/>
+            <body name="l_knee_link" pos="-0.00037204 -5e-05 -0.096886">
+              <inertial pos="0.00334256 -0.0196465 -0.0425053" quat="0.999536 8.38713e-05 -0.0304236 -0.00159474" mass="0.045" diaginertia="6.75038e-05 5.49999e-05 2.05563e-05"/>
+              <joint name="l_knee" pos="0 0 0" axis="0 1 0" range="-2.09 2.09"  damping="0.02"/>
+              <geom type="mesh" rgba="0.4 0.9 0.4 1" mesh="l_knee_link"/>
+              <body name="l_ank_pitch_link" pos="0.001037 0 -0.089077">
+                <inertial pos="-0.017544 -0.0195632 0.0134182" quat="0.503197 0.510389 0.496862 0.489309" mass="0.12" diaginertia="7.36835e-05 6.10769e-05 2.91596e-05"/>
+                <joint name="l_ank_pitch" pos="0 0 0" axis="0 -1 0" range="-2.09 2.09"  damping="0.02"/>
+                <geom type="mesh" rgba="0.4 0.9 0.4 1" mesh="l_ank_pitch_link"/>
+                <body name="l_ank_roll_link" pos="-0.019037 -0.02 0">
+                  <inertial pos="0.028508 0.012873 -0.017671" quat="-0.0257514 0.696659 -0.0389182 0.715883" mass="0.0675" diaginertia="0.000126012 9.21991e-05 4.20891e-05"/>
+                  <joint name="l_ank_roll" pos="0 0 0" axis="1 0 0" range="-2.09 2.09"  damping="0.02"/>
+                  <geom type="mesh" rgba="0.4 0.9 0.4 1" mesh="l_ank_roll_link" contype="1" conaffinity="15"/>
+                  <!-- <geom type="box" pos="0.0 -0.0 0" size="0.07 0.03 0.012" rgba="0.4 0.9 0.4 1" contype="1" conaffinity="1"/> -->
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="r_hip_yaw_link" pos="0 -0.029 0">
+        <inertial pos="-3.08089e-05 0.00125727 -0.00137107" quat="0.685451 0.035864 -0.0116524 0.727142" mass="0.032" diaginertia="2.27792e-05 1.75538e-05 8.97703e-06"/>
+        <joint name="r_hip_yaw" pos="0 0 0" axis="0 0 -1" range="-2.09 2.09"  damping="0.02"/>
+        <geom type="mesh" rgba="0.4 0.9 0.4 1" mesh="r_hip_yaw_link"/>
+        <body name="r_hip_roll_link" pos="-0.01955 0 -0.0255">
+          <inertial pos="0.0013624 -0.000566876 -0.0134187" quat="0.498207 0.491474 0.501276 0.508887" mass="0.12" diaginertia="7.31184e-05 6.05065e-05 2.91551e-05"/>
+          <joint name="r_hip_roll" pos="0 0 0" axis="-1 0 0" range="-2.09 2.09"  damping="0.02"/>
+          <geom type="mesh" rgba="0.4 0.9 0.4 1" mesh="r_hip_roll_link"/>
+          <body name="r_hip_pitch_link" pos="0.0190366 -0.02 0">
+            <inertial pos="0.0135944 0.0193812 -0.0727054" quat="0.738938 0.0427036 0.0407745 0.671181" mass="0.1065" diaginertia="0.000112942 0.000111046 4.06518e-05"/>
+            <joint name="r_hip_pitch" pos="0 0 0" axis="0 -1 0" range="-2.09 2.09"  damping="0.02"/>
+            <geom type="mesh" rgba="0.4 0.9 0.4 1" mesh="r_hip_pitch_link"/>
+            <body name="r_knee_link" pos="-0.000372039 5e-05 -0.0968862">
+              <inertial pos="0.00334266 0.0196474 -0.0425049" quat="0.999535 -0.000104839 -0.0304236 0.0019934" mass="0.045" diaginertia="6.75039e-05 5.49998e-05 2.05563e-05"/>
+              <joint name="r_knee" pos="0 0 0" axis="0 -1 0" range="-2.09 2.09"  damping="0.02"/>
+              <geom type="mesh" rgba="0.4 0.9 0.4 1" mesh="r_knee_link"/>
+              <body name="r_ank_pitch_link" pos="0.00103699 0 -0.0890766">
+                <inertial pos="-0.017544 0.0195632 0.0134182" quat="0.489309 0.496862 0.510389 0.503197" mass="0.12" diaginertia="7.36835e-05 6.10769e-05 2.91596e-05"/>
+                <joint name="r_ank_pitch" pos="0 0 0" axis="0 1 0" range="-2.09 2.09"  damping="0.02"/>
+                <geom type="mesh" rgba="0.4 0.9 0.4 1" mesh="r_ank_pitch_link"/>
+                <body name="r_ank_roll_link" pos="-0.0190366 0.02 0">
+                  <inertial pos="0.0285085 -0.0128729 -0.017671" quat="0.0257514 0.696659 0.0389182 0.715883" mass="0.0675" diaginertia="0.000126012 9.21991e-05 4.20891e-05"/>
+                  <joint name="r_ank_roll" pos="0 0 0" axis="1 0 0" range="-2.09 2.09"  damping="0.02"/>
+                  <geom type="mesh" rgba="0.4 0.9 0.4 1" mesh="r_ank_roll_link" contype="0" conaffinity="0"/>
+                  <!-- <geom type="box" pos="0.03 0 0" size="0.07 0.03 0.012" rgba="0.4 0.9 0.4 1" contype="1" conaffinity="1"/> -->
+
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+<!-- <keyframe>
+  <key name="stand_pose"
+       qpos="0 0 0 0 0 0 1 0.5 0.2 -0.3 -0.1 -0.2 0 -0.5 -0.2 0.3 0.1 0.2 0" />
+</keyframe> -->
+  <actuator>
+    <motor name="l_hip_yaw" joint="l_hip_yaw" gear="1" ctrllimited="true" ctrlrange="-6 6"/>
+    <motor name="l_hip_roll" joint="l_hip_roll" gear="1" ctrllimited="true" ctrlrange="-6 6"/>
+    <motor name="l_hip_pitch" joint="l_hip_pitch" gear="1" ctrllimited="true" ctrlrange="-6 6"/>
+    <motor name="l_knee" joint="l_knee" gear="1" ctrllimited="true" ctrlrange="-6 6"/>
+    <motor name="l_ank_pitch" joint="l_ank_pitch" gear="1" ctrllimited="true" ctrlrange="-6 6"/>
+    <motor name="l_ank_roll" joint="l_ank_roll" gear="1" ctrllimited="true" ctrlrange="-6 6"/>
+    <motor name="r_hip_yaw" joint="r_hip_yaw" gear="1" ctrllimited="true" ctrlrange="-6 6"/>
+    <motor name="r_hip_roll" joint="r_hip_roll" gear="1" ctrllimited="true" ctrlrange="-6 6"/>
+    <motor name="r_hip_pitch" joint="r_hip_pitch" gear="1" ctrllimited="true" ctrlrange="-6 6"/>
+    <motor name="r_knee" joint="r_knee" gear="1" ctrllimited="true" ctrlrange="-6 6"/>
+    <motor name="r_ank_pitch" joint="r_ank_pitch" gear="1" ctrllimited="true" ctrlrange="-6 6"/>
+    <motor name="r_ank_roll" joint="r_ank_roll" gear="1" ctrllimited="true" ctrlrange="-6 6"/>
+  </actuator>
+    <sensor>
+      <actuatorpos name='l_hip_yaw'  actuator='l_hip_yaw' user='13'/>
+      <actuatorpos name='l_hip_roll'  actuator='l_hip_roll' user='13'/>
+      <actuatorpos name='l_hip_pitch'  actuator='l_hip_pitch' user='13'/>
+      <actuatorpos name='l_knee'  actuator='l_knee' user='13'/>
+      <actuatorpos name='l_ank_pitch'  actuator='l_ank_pitch' user='13'/>
+      <actuatorpos name='l_ank_roll'  actuator='l_ank_roll' user='13'/>
+      <actuatorpos name='r_hip_yaw'  actuator='r_hip_yaw' user='13'/>
+      <actuatorpos name='r_hip_roll'  actuator='r_hip_roll' user='13'/>
+      <actuatorpos name='r_hip_pitch'  actuator='r_hip_pitch' user='13'/>
+      <actuatorpos name='r_knee'  actuator='r_knee' user='13'/>
+      <actuatorpos name='r_ank_pitch'  actuator='r_ank_pitch' user='13'/>
+      <actuatorpos name='r_ank_roll'  actuator='r_ank_roll' user='13'/>
+
+      <actuatorvel name='l_hip_yaw_v'  actuator='l_hip_yaw' user='13'/>
+      <actuatorvel name='l_hip_roll_v'  actuator='l_hip_roll' user='13'/>
+      <actuatorvel name='l_hip_pitch_v'  actuator='l_hip_pitch' user='13'/>
+      <actuatorvel name='l_knee_v'  actuator='l_knee' user='13'/>
+      <actuatorvel name='l_ank_pitch_v'  actuator='l_ank_pitch' user='13'/>
+      <actuatorvel name='l_ank_roll_v'  actuator='l_ank_roll' user='13'/>
+      <actuatorvel name='r_hip_yaw_v'  actuator='r_hip_yaw' user='13'/>
+      <actuatorvel name='r_hip_roll_v'  actuator='r_hip_roll' user='13'/>
+      <actuatorvel name='r_hip_pitch_v'  actuator='r_hip_pitch' user='13'/>
+      <actuatorvel name='r_knee_v'  actuator='r_knee' user='13'/>
+      <actuatorvel name='r_ank_pitch_v'  actuator='r_ank_pitch' user='13'/>
+      <actuatorvel name='r_ank_roll_v'  actuator='r_ank_roll' user='13'/>
+
+      <actuatorfrc name='l_hip_yaw_f'  actuator='l_hip_yaw' user='13' noise='1e-3'/>
+      <actuatorfrc name='l_hip_roll_f'  actuator='l_hip_roll' user='13' noise='1e-3'/>
+      <actuatorfrc name='l_hip_pitch_f'  actuator='l_hip_pitch' user='13' noise='1e-3'/>
+      <actuatorfrc name='l_knee_f'  actuator='l_knee' user='13' noise='1e-3'/>
+      <actuatorfrc name='l_ank_pitch_f'  actuator='l_ank_pitch' user='13' noise='1e-3'/>
+      <actuatorfrc name='l_ank_roll_f'  actuator='l_ank_roll' user='13' noise='1e-3'/>
+      <actuatorfrc name='r_hip_yaw_f'  actuator='r_hip_yaw' user='13' noise='1e-3'/>
+      <actuatorfrc name='r_hip_roll_f'  actuator='r_hip_roll' user='13' noise='1e-3'/>
+      <actuatorfrc name='r_hip_pitch_f'  actuator='r_hip_pitch' user='13' noise='1e-3'/>
+      <actuatorfrc name='r_knee_f'  actuator='r_knee' user='13' noise='1e-3'/>
+      <actuatorfrc name='r_ank_pitch_f'  actuator='r_ank_pitch' user='13' noise='1e-3'/>
+      <actuatorfrc name='r_ank_roll_f'  actuator='r_ank_roll' user='13' noise='1e-3'/>
+
+      <framequat     name='orientation' objtype='site' noise='0.001' objname='imu'/>
+      <framepos     name='position' objtype='site' noise='0.001' objname='imu'/>
+      <gyro          name='angular-velocity'    site='imu' noise='0.005' />
+      <velocimeter   name='linear-velocity'     site='imu' noise='0.001' />
+      <accelerometer name='linear-acceleration' site='imu' noise='0.005' />
+      <magnetometer  name='magnetometer'        site='imu'/>
+    </sensor>
+</mujoco>
