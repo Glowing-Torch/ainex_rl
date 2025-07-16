@@ -40,7 +40,7 @@ import torch
 import time
 
 class cmd:
-    vx = 0.0
+    vx = 0.
     vy = 0.0
     dyaw = 0.0
 
@@ -71,14 +71,11 @@ def get_obs(data):
     '''Extracts an observation from the mujoco data structure
     '''
     
-    q = data.qpos.astype(np.double)
-    dq = data.qvel.astype(np.double)
+    q = data.qpos.astype(np.double)[7:19]
+    dq = data.qvel.astype(np.double)[6:18]
     quat = data.sensor('orientation').data[[1, 2, 3, 0]].astype(np.double)
-    r = R.from_quat(quat)
-    v = r.apply(data.qvel[:3], inverse=True).astype(np.double)  # In the base frame
     omega = data.sensor('angular-velocity').data.astype(np.double)
-    gvec = r.apply(np.array([0., 0., -1.]), inverse=True).astype(np.double)
-    return (q, dq, quat, v, omega, gvec)
+    return (q, dq, quat, omega)
 
 def pd_control(target_q, q, kp, target_dq, dq, kd):
     '''Calculates torques from position commands
@@ -127,7 +124,7 @@ def run_mujoco(policy, cfg):
         step_start=time.time()
 
         # Obtain an observation
-        q, dq, quat, v, omega, gvec = get_obs(data)
+        q, dq, quat, omega = get_obs(data)
         # print("q", q)
         # print("dq", dq)
         # 1000hz -> 100hz
@@ -153,7 +150,8 @@ def run_mujoco(policy, cfg):
             policy_input = np.zeros([1, cfg.env.num_observations], dtype=np.float32)
             for i in range(cfg.env.frame_stack):
                 policy_input[0, i * cfg.env.num_single_obs : (i + 1) * cfg.env.num_single_obs] = hist_obs[i][0, :]
-            action[:] = policy(torch.tensor(policy_input))[0].detach().numpy()
+            with torch.no_grad():
+                action[:] = policy(torch.tensor(policy_input))[0].detach().numpy()
             action = np.clip(action, -cfg.normalization.clip_actions, cfg.normalization.clip_actions)
             target_q = action * cfg.control.action_scale
 
@@ -200,5 +198,5 @@ if __name__ == '__main__':
             tau_limit = 6. * np.ones(12, dtype=np.double)
 
     policy = torch.jit.load(args.load_model)
-    policy.eval()
+    # policy.eval()
     run_mujoco(policy, Sim2simCfg())

@@ -34,7 +34,7 @@
     <mesh name="l_gripper_link" file="l_gripper_link.STL"/>
   </asset>
   <default>
-      <joint limited='true'/>
+      <joint limited='true' damping='0.01' frictionloss='0.01'/>
       <motor ctrllimited='true'/>
       <!-- <geom  contype='0' conaffinity='0' /> -->
       <default class='visualgeom'>
@@ -44,9 +44,9 @@
   <worldbody>
     <light directional="true" diffuse=".4 .4 .4" specular="0.1 0.1 0.1" pos="0 0 5.0" dir="0 0 -1" castshadow="false"/>
     <light directional="true" diffuse=".6 .6 .6" specular="0.2 0.2 0.2" pos="0 0 4" dir="0 0 -1"/>
-    <geom name="floor" size="10 10 0.1" pos="0.0 0 -0.1" contype="1" conaffinity="1" type="plane" material="grid_mat"/>
+    <geom name="floor" size="10 10 0.1" pos="0.0 0 -0.1" contype="1" conaffinity="1" friction="1.0 0.005 0.0001" type="plane" material="grid_mat"/>
     <body name="base_link" pos="0 0 0.3" >
-      <!-- <freejoint/> -->
+      <freejoint/>
       <inertial pos="0 0 0" mass="5" diaginertia="0.1 0.1 0.1" />
       <geom type="mesh" mesh="body_link" rgba="0.1 0.1 0.1 1" contype="0" conaffinity="0" />
       <site name='imu' size='0.01' pos='0.0 0 0.0'/>
@@ -64,29 +64,29 @@
       <geom pos="0.0202334 0.0741416 -0.0929119" quat="0.707388 -0.706825 0 0" type="mesh" rgba="0.4 0.9 0.4 1" mesh="l_gripper_link"/>
       <body name="l_hip_yaw_link" pos="0 0.029 0">
         <inertial pos="-3.11406e-05 -0.00125722 -0.0013713" quat="0.727661 -0.0116933 0.0358264 0.684901" mass="0.032" diaginertia="2.27801e-05 1.75528e-05 8.97707e-06"/>
-        <joint name="l_hip_yaw" pos="0 0 0" axis="0 0 -1" range="-2.09 2.09"  damping="0.02"/>
+        <joint name="l_hip_yaw" pos="0 0 0" axis="0 0 -1" range="-2.09 2.09"  />
         <geom type="mesh" rgba="0.4 0.9 0.4 1" mesh="l_hip_yaw_link"/>
         <body name="l_hip_roll_link" pos="-0.01955 0 -0.0255">
           <inertial pos="0.00136239 0.000566861 -0.0134187" quat="0.508887 0.501276 0.491474 0.498207" mass="0.12" diaginertia="7.31184e-05 6.05065e-05 2.91551e-05"/>
-          <joint name="l_hip_roll" pos="0 0 0" axis="-1 0 0" range="-2.09 2.09"  damping="0.02"/>
+          <joint name="l_hip_roll" pos="0 0 0" axis="-1 0 0" range="-2.09 2.09"  />
           <geom type="mesh" rgba="0.4 0.9 0.4 1" mesh="l_hip_roll_link"/>
           <body name="l_hip_pitch_link" pos="0.019037 0.02 0">
             <inertial pos="0.0135944 -0.0193812 -0.0727051" quat="0.671181 0.0407745 0.0427036 0.738938" mass="0.1065" diaginertia="0.000112942 0.000111046 4.06518e-05"/>
-            <joint name="l_hip_pitch" pos="0 0 0" axis="0 1 0" range="-2.09 2.09"  damping="0.02"/>
+            <joint name="l_hip_pitch" pos="0 0 0" axis="0 1 0" range="-2.09 2.09"  />
             <geom type="mesh" rgba="0.4 0.9 0.4 1" mesh="l_hip_pitch_link"/>
             <body name="l_knee_link" pos="-0.00037204 -5e-05 -0.096886">
               <inertial pos="0.00334256 -0.0196465 -0.0425053" quat="0.999536 8.38713e-05 -0.0304236 -0.00159474" mass="0.045" diaginertia="6.75038e-05 5.49999e-05 2.05563e-05"/>
-              <joint name="l_knee" pos="0 0 0" axis="0 1 0" range="-2.09 2.09"  damping="0.02"/>
+              <joint name="l_knee" pos="0 0 0" axis="0 1 0" range="-2.09 2.09"  />
               <geom type="mesh" rgba="0.4 0.9 0.4 1" mesh="l_knee_link"/>
               <body name="l_ank_pitch_link" pos="0.001037 0 -0.089077">
                 <inertial pos="-0.017544 -0.0195632 0.0134182" quat="0.503197 0.510389 0.496862 0.489309" mass="0.12" diaginertia="7.36835e-05 6.10769e-05 2.91596e-05"/>
-                <joint name="l_ank_pitch" pos="0 0 0" axis="0 -1 0" range="-2.09 2.09"  damping="0.02"/>
+                <joint name="l_ank_pitch" pos="0 0 0" axis="0 -1 0" range="-2.09 2.09"  />
                 <geom type="mesh" rgba="0.4 0.9 0.4 1" mesh="l_ank_pitch_link"/>
-                <body name="l_ank_roll_link" pos="-0.019037 -0.02 0">
+                <body name="l_ank_roll_link" pos="-0.019037 -0.02 0.">
                   <inertial pos="0.028508 0.012873 -0.017671" quat="-0.0257514 0.696659 -0.0389182 0.715883" mass="0.0675" diaginertia="0.000126012 9.21991e-05 4.20891e-05"/>
-                  <joint name="l_ank_roll" pos="0 0 0" axis="1 0 0" range="-2.09 2.09"  damping="0.02"/>
-                  <geom type="mesh" rgba="0.4 0.9 0.4 1" mesh="l_ank_roll_link" contype="1" conaffinity="15"/>
-                  <!-- <geom type="box" pos="0.0 -0.0 0" size="0.07 0.03 0.012" rgba="0.4 0.9 0.4 1" contype="1" conaffinity="1"/> -->
+                  <joint name="l_ank_roll" pos="0 0 0" axis="1 0 0" range="-2.09 2.09"  />
+                  <geom type="mesh" rgba="0.4 0.9 0.4 1" mesh="l_ank_roll_link" condim="3" contype="1" conaffinity="1"/>
+                  <!-- <geom type="box" pos="0.0 -0.0 0.0" size="0.03 0.02 0.005" rgba="0.4 0.9 0.4 1" contype="1" conaffinity="1"/> -->
                 </body>
               </body>
             </body>
@@ -95,29 +95,29 @@
       </body>
       <body name="r_hip_yaw_link" pos="0 -0.029 0">
         <inertial pos="-3.08089e-05 0.00125727 -0.00137107" quat="0.685451 0.035864 -0.0116524 0.727142" mass="0.032" diaginertia="2.27792e-05 1.75538e-05 8.97703e-06"/>
-        <joint name="r_hip_yaw" pos="0 0 0" axis="0 0 -1" range="-2.09 2.09"  damping="0.02"/>
+        <joint name="r_hip_yaw" pos="0 0 0" axis="0 0 -1" range="-2.09 2.09"  />
         <geom type="mesh" rgba="0.4 0.9 0.4 1" mesh="r_hip_yaw_link"/>
         <body name="r_hip_roll_link" pos="-0.01955 0 -0.0255">
           <inertial pos="0.0013624 -0.000566876 -0.0134187" quat="0.498207 0.491474 0.501276 0.508887" mass="0.12" diaginertia="7.31184e-05 6.05065e-05 2.91551e-05"/>
-          <joint name="r_hip_roll" pos="0 0 0" axis="-1 0 0" range="-2.09 2.09"  damping="0.02"/>
+          <joint name="r_hip_roll" pos="0 0 0" axis="-1 0 0" range="-2.09 2.09"  />
           <geom type="mesh" rgba="0.4 0.9 0.4 1" mesh="r_hip_roll_link"/>
           <body name="r_hip_pitch_link" pos="0.0190366 -0.02 0">
             <inertial pos="0.0135944 0.0193812 -0.0727054" quat="0.738938 0.0427036 0.0407745 0.671181" mass="0.1065" diaginertia="0.000112942 0.000111046 4.06518e-05"/>
-            <joint name="r_hip_pitch" pos="0 0 0" axis="0 -1 0" range="-2.09 2.09"  damping="0.02"/>
+            <joint name="r_hip_pitch" pos="0 0 0" axis="0 -1 0" range="-2.09 2.09"  />
             <geom type="mesh" rgba="0.4 0.9 0.4 1" mesh="r_hip_pitch_link"/>
             <body name="r_knee_link" pos="-0.000372039 5e-05 -0.0968862">
               <inertial pos="0.00334266 0.0196474 -0.0425049" quat="0.999535 -0.000104839 -0.0304236 0.0019934" mass="0.045" diaginertia="6.75039e-05 5.49998e-05 2.05563e-05"/>
-              <joint name="r_knee" pos="0 0 0" axis="0 -1 0" range="-2.09 2.09"  damping="0.02"/>
+              <joint name="r_knee" pos="0 0 0" axis="0 -1 0" range="-2.09 2.09"  />
               <geom type="mesh" rgba="0.4 0.9 0.4 1" mesh="r_knee_link"/>
               <body name="r_ank_pitch_link" pos="0.00103699 0 -0.0890766">
                 <inertial pos="-0.017544 0.0195632 0.0134182" quat="0.489309 0.496862 0.510389 0.503197" mass="0.12" diaginertia="7.36835e-05 6.10769e-05 2.91596e-05"/>
-                <joint name="r_ank_pitch" pos="0 0 0" axis="0 1 0" range="-2.09 2.09"  damping="0.02"/>
+                <joint name="r_ank_pitch" pos="0 0 0" axis="0 1 0" range="-2.09 2.09"  />
                 <geom type="mesh" rgba="0.4 0.9 0.4 1" mesh="r_ank_pitch_link"/>
-                <body name="r_ank_roll_link" pos="-0.0190366 0.02 0">
+                <body name="r_ank_roll_link" pos="-0.0190366 0.02 0.0">
                   <inertial pos="0.0285085 -0.0128729 -0.017671" quat="0.0257514 0.696659 0.0389182 0.715883" mass="0.0675" diaginertia="0.000126012 9.21991e-05 4.20891e-05"/>
-                  <joint name="r_ank_roll" pos="0 0 0" axis="1 0 0" range="-2.09 2.09"  damping="0.02"/>
-                  <geom type="mesh" rgba="0.4 0.9 0.4 1" mesh="r_ank_roll_link" contype="0" conaffinity="0"/>
-                  <!-- <geom type="box" pos="0.03 0 0" size="0.07 0.03 0.012" rgba="0.4 0.9 0.4 1" contype="1" conaffinity="1"/> -->
+                  <joint name="r_ank_roll" pos="0 0 0" axis="1 0 0" range="-2.09 2.09"  />
+                  <geom type="mesh" rgba="0.4 0.9 0.4 1" mesh="r_ank_roll_link" condim="3" contype="1" conaffinity="15"/>
+                  <!-- <geom type="box" pos="0.0 0 0.0" size="0.03 0.02 0.005" rgba="0.4 0.9 0.4 1" contype="1" conaffinity="1"/> -->
 
                 </body>
               </body>
