@@ -40,7 +40,7 @@ import torch
 import time
 
 class cmd:
-    vx = 0.
+    vx = 0.0
     vy = 0.0
     dyaw = 0.0
 
@@ -144,7 +144,6 @@ def run_mujoco(policy, cfg):
             obs[0, 41:44] = omega
             obs[0, 44:47] = eu_ang
             obs = np.clip(obs, -cfg.normalization.clip_observations, cfg.normalization.clip_observations)
-
             hist_obs.append(obs)
             hist_obs.popleft()
             policy_input = np.zeros([1, cfg.env.num_observations], dtype=np.float32)
@@ -193,7 +192,7 @@ if __name__ == '__main__':
             decimation = 10
 
         class robot_config:
-            kps = np.array([4, 6, 4, 4, 2, 2, 4, 6, 4, 4, 2, 2], dtype=np.double)
+            kps = 2*np.array([4, 6, 4, 4, 2, 2, 4, 6, 4, 4, 2, 2], dtype=np.double)
             kds = np.array([0.1]*12, dtype=np.double)
             tau_limit = 6. * np.ones(12, dtype=np.double)
 

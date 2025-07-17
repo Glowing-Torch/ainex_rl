@@ -129,10 +129,10 @@ class XBotLCfg(LeggedRobotCfg):
         # action scale: target angle = actionScale * action + defaultAngle
         action_scale = 0.25
         # decimation: Number of control action updates @ sim DT per policy DT
-        decimation = 10  # 100hz
+        decimation = 10  # 100hz policy update frequency min:30hz
 
     class sim(LeggedRobotCfg.sim):
-        dt = 0.001  # 1000 Hz
+        dt = 0.001  # 1000 Hz control frequency min:100Hz
         substeps = 1
         up_axis = 1  # 0 is y, 1 is z
 
@@ -152,9 +152,9 @@ class XBotLCfg(LeggedRobotCfg):
 
     class domain_rand:
         randomize_friction = False
-        friction_range = [0.1, 2.0]
+        friction_range = [0.5, 1.5]
         randomize_base_mass = False
-        added_mass_range = [-5., 5.]
+        added_mass_range = [-0.5, 3.]
         push_robots = False
         push_interval_s = 4
         max_push_vel_xy = 0.2
@@ -177,7 +177,7 @@ class XBotLCfg(LeggedRobotCfg):
 
     class rewards:
         base_height_target = 0.2
-        min_dist = 0.06
+        min_dist = 0.06  #TODO larger
         max_dist = 0.24
         # put some settings here for LLM parameter tuning
         target_joint_pos_scale = 0.17    # rad
