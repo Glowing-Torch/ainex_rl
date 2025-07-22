@@ -1,4 +1,8 @@
 /logs
 /images
 /videos
-
+**/log
+**/__pycache__
+**/*.pyc
+**/build
+**/install

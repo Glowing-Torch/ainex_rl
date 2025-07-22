@@ -27,7 +27,7 @@
 #
 # Copyright (c) 2024 Beijing RobotEra TECHNOLOGY CO.,LTD. All rights reserved.
 
-
+#!/home/song/miniconda3/envs/humanoid/bin/python
 import math
 import numpy as np
 import mujoco, mujoco_viewer
@@ -200,7 +200,7 @@ if __name__ == '__main__':
             kds = np.array([0.1,0.1,0.1,0.1, 0.3,0.1, 
                             0.1,0.1,0.1,0.1, 0.3,0.1], dtype=np.double)
 
-            tau_limit = 6 * np.ones(12, dtype=np.double)
+            tau_limit = 5.1 * np.ones(12, dtype=np.double)
 
     policy = torch.jit.load(args.load_model)
     policy.eval()
