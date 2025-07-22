@@ -41,7 +41,7 @@ import torch
 import time
 
 class cmd:
-    vx = 0.0
+    vx = 0.5
     vy = 0.0
     dyaw = 0.0
 
@@ -144,7 +144,7 @@ def run_mujoco(policy, cfg):
             obs[0, 2] = cmd.vx * cfg.normalization.obs_scales.lin_vel
             obs[0, 3] = cmd.vy * cfg.normalization.obs_scales.lin_vel
             obs[0, 4] = cmd.dyaw * cfg.normalization.obs_scales.ang_vel
-            obs[0, 5:17] = q * cfg.normalization.obs_scales.dof_pos
+            obs[0, 5:17] = (q - default_joint_pos) * cfg.normalization.obs_scales.dof_pos
             obs[0, 17:29] = dq * cfg.normalization.obs_scales.dof_vel
             obs[0, 29:41] = action
             obs[0, 41:44] = omega
@@ -203,5 +203,5 @@ if __name__ == '__main__':
             tau_limit = 6 * np.ones(12, dtype=np.double)
 
     policy = torch.jit.load(args.load_model)
-    # policy.eval()
+    policy.eval()
     run_mujoco(policy, Sim2simCfg())

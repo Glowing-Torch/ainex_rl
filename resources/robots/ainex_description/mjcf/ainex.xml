@@ -45,7 +45,7 @@
     <geom name="floor" size="10 10 0.1" pos="0.0 0 0" condim="3"  conaffinity="15" type="plane" material="grid_mat"/>
     <body name="base_link" pos="0 0 0.25" >
       <freejoint/>
-      <inertial pos="-0.002 -7.92910841109997E-05 0.00304544952747596" mass="0.743"  diaginertia="0.00121619  0.00104402  0.00108564" />
+      <inertial pos="-0.002 -7.92910841109997E-05 0.00804544952747596" mass="0.743"  diaginertia="0.00121619  0.00104402  0.00108564" />
       <geom type="mesh" mesh="body_link" rgba="0.1 0.1 0.1 1" /> 
       <site name='imu' size='0.01' pos='0.0 0 0.0'/>
     <body name="l_hip_yaw_link" pos="0 0.029 0">
