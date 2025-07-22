@@ -200,23 +200,24 @@
       <mass value="0.0675"/>
       <inertia ixx="0.00004217" ixy="-0.00000108" ixz="-0.00000226" iyy="0.00009246" iyz="0.00000304" izz="0.00012567"/>
     </inertial>
-    <!-- <visual>
+    <visual>
       <origin
-        xyz="0 0 0 "
+        xyz="0.03 -0.015 -0.02 "
         rpy="0 0 0" />
       <geometry>
-        <box size="0.12 0.06 0.015"/>
+        <box size="0.12 0.08 0.004"/>
       </geometry>
+      <material name="green"/>
     </visual>
     <collision>
       <origin
-        xyz="0 0 0 "
+        xyz="0.03 -0.015 -0.02 "
         rpy="0 0 0" />
       <geometry>
-        <box size="0.12 0.06 0.015"/>
+        <box size="0.12 0.08 0.004"/>
       </geometry>
-    </collision> -->
-    <visual>
+    </collision>
+    <!-- <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
         <mesh filename="../meshes/r_ank_roll_link.STL"/>
@@ -228,7 +229,7 @@
       <geometry>
         <mesh filename="../meshes/r_ank_roll_link.STL"/>
       </geometry>
-    </collision>
+    </collision> -->
   </link>
   <joint name="r_ank_roll" type="revolute">
     <origin rpy="0 0 0" xyz="-0.0190366011761311 0.0199999999998644 0"/>
@@ -384,23 +385,24 @@
       <mass value="0.0675"/>
       <inertia ixx="0.00004217" ixy="0.00000108" ixz="-0.00000226" iyy="0.00009246" iyz="-0.00000304" izz="0.00012567"/>
     </inertial>
-    <!-- <visual>
+    <visual>
       <origin
-        xyz="0 0 0 "
+        xyz="0.03 0.015 -0.02 "
         rpy="0 0 0" />
       <geometry>
-        <box size="0.12 0.06 0.015"/>
+        <box size="0.12 0.08 0.004"/>
       </geometry>
+      <material name="green"/>
     </visual>
     <collision>
       <origin
-        xyz="0 0 0 "
+        xyz="0.03 0.015 -0.02"
         rpy="0 0 0" />
       <geometry>
-        <box size="0.12 0.06 0.015"/>
+        <box size="0.12 0.08 0.004"/>
       </geometry>
-    </collision> -->
-    <visual>
+    </collision>
+    <!-- <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
         <mesh filename="../meshes/l_ank_roll_link.STL"/>
@@ -412,7 +414,7 @@
       <geometry>
         <mesh filename="../meshes/l_ank_roll_link.STL"/>
       </geometry>
-    </collision>
+    </collision> -->
   </link>
   <joint name="l_ank_roll" type="revolute">
     <origin rpy="0 0 0" xyz="-0.019037 -0.02 0"/>
@@ -442,7 +444,7 @@
       </geometry>
     </collision>
   </link>
-  <joint name="head_pan" type="fixed">
+  <joint name="head_pan" type="revolute">
     <origin rpy="0 0 0" xyz="-0.00410029363273529 0 0.107800000000251"/>
     <parent link="body_link"/>
     <child link="head_pan_link"/>
@@ -470,7 +472,7 @@
       </geometry>
     </collision>
   </link>
-  <joint name="head_tilt" type="fixed">
+  <joint name="head_tilt" type="revolute">
     <origin rpy="0 0 0" xyz="0.00904594549071587 -0.0185733521405788 0.0281579437975029"/>
     <parent link="head_pan_link"/>
     <child link="head_tilt_link"/>
@@ -514,7 +516,7 @@
       </geometry>
     </collision>
   </link>
-  <joint name="r_sho_pitch" type="fixed">
+  <joint name="r_sho_pitch" type="revolute">
     <origin rpy="0 0 0" xyz="-5.46273713767254E-05 -0.0524909514103703 0.0874480463620076"/>
     <parent link="body_link"/>
     <child link="r_sho_pitch_link"/>
@@ -570,7 +572,7 @@
       </geometry>
     </collision>
   </link>
-  <joint name="r_el_pitch" type="fixed">
+  <joint name="r_el_pitch" type="revolute">
     <origin rpy="0 0 0" xyz="-0.0200034998200733 -0.0741099367526448 0"/>
     <parent link="r_sho_roll_link"/>
     <child link="r_el_pitch_link"/>
@@ -585,20 +587,20 @@
       <inertia ixx="0.00014320" ixy="0.00000030" ixz="-0.00000003" iyy="0.00003101" iyz="-0.00001329" izz="0.00014052"/>
     </inertial>
     <visual>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <origin rpy="0 0 1.57" xyz="0 0 0"/>
       <geometry>
         <mesh filename="../meshes/r_el_yaw_link.STL"/>
       </geometry>
       <material name="green"/>
     </visual>
     <collision>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <origin rpy="0 0 1.57" xyz="0 0 0"/>
       <geometry>
         <mesh filename="../meshes/r_el_yaw_link.STL"/>
       </geometry>
     </collision>
   </link>
-  <joint name="r_el_yaw" type="fixed">
+  <joint name="r_el_yaw" type="revolute">
     <origin rpy="0 0 0" xyz="0.000397813054181526 -0.0170183162715326 0.0190701823981362"/>
     <parent link="r_el_pitch_link"/>
     <child link="r_el_yaw_link"/>
@@ -626,7 +628,7 @@
       </geometry>
     </collision>
   </link>
-  <joint name="r_gripper" type="fixed">
+  <joint name="r_gripper" type="revolute">
     <origin rpy="0 0 0" xyz="0.0198901817590543 -0.0892355537647637 -0.0190701818667893"/>
     <parent link="r_el_yaw_link"/>
     <child link="r_gripper_link"/>
@@ -654,7 +656,7 @@
       </geometry>
     </collision>
   </link>
-  <joint name="l_sho_pitch" type="fixed">
+  <joint name="l_sho_pitch" type="revolute">
     <origin rpy="0 0 0" xyz="-5.4627E-05 0.052491 0.087448"/>
     <parent link="body_link"/>
     <child link="l_sho_pitch_link"/>
@@ -682,8 +684,8 @@
       </geometry>
     </collision>
   </link>
-  <joint name="l_sho_roll" type="fixed">
-    <origin rpy="-1.57 0 0" xyz="0.020003 0.021507 0"/>
+  <joint name="l_sho_roll" type="revolute">
+    <origin rpy="0 0 0" xyz="0.020003 0.021507 0"/>
     <parent link="l_sho_pitch_link"/>
     <child link="l_sho_roll_link"/>
     <axis xyz="1 0 0"/>
@@ -710,7 +712,7 @@
       </geometry>
     </collision>
   </link>
-  <joint name="l_el_pitch" type="fixed">
+  <joint name="l_el_pitch" type="revolute">
     <origin rpy="0 0 0" xyz="-0.020003 0.074109 0"/>
     <parent link="l_sho_roll_link"/>
     <child link="l_el_pitch_link"/>
@@ -725,20 +727,20 @@
       <inertia ixx="0.00014320" ixy="-0.00000030" ixz="-0.00000003" iyy="0.00003101" iyz="0.00001329" izz="0.00014052"/>
     </inertial>
     <visual>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <origin rpy="0 0 -1.57" xyz="0 0 0"/>
       <geometry>
         <mesh filename="../meshes/l_el_yaw_link.STL"/>
       </geometry>
       <material name="green"/>
     </visual>
     <collision>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <origin rpy="0 0 -1.57" xyz="0 0 0"/>
       <geometry>
         <mesh filename="../meshes/l_el_yaw_link.STL"/>
       </geometry>
     </collision>
   </link>
-  <joint name="l_el_yaw" type="fixed">
+  <joint name="l_el_yaw" type="revolute">
     <origin rpy="0 0 0" xyz="0.00039506 0.017019 0.019072"/>
     <parent link="l_el_pitch_link"/>
     <child link="l_el_yaw_link"/>
@@ -766,7 +768,7 @@
       </geometry>
     </collision>
   </link>
-  <joint name="l_gripper" type="fixed">
+  <joint name="l_gripper" type="revolute">
     <origin rpy="0 0 0" xyz="0.019893 0.089232 -0.019072"/>
     <parent link="l_el_yaw_link"/>
     <child link="l_gripper_link"/>

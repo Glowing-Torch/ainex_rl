@@ -123,18 +123,23 @@ class XBotLFreeEnv(LeggedRobot):
         sin_pos_l = sin_pos.clone()
         sin_pos_r = sin_pos.clone()
         self.ref_dof_pos = torch.zeros_like(self.dof_pos)
-        scale_1 = self.cfg.rewards.target_joint_pos_scale
-        scale_2 = 2 * scale_1
+        # scale_1 = self.cfg.rewards.target_joint_pos_scale
+        # scale_1 = 0.70
+        # scale_2 = -0.35
+        # scale_3 = 0.35
+        scale_1 = 0.836
+        scale_2 = -0.752
+        scale_3 = 0.105
         # left foot stance phase set to default joint pos
         sin_pos_l[sin_pos_l > 0] = 0
         self.ref_dof_pos[:, 2] = sin_pos_l * scale_1
         self.ref_dof_pos[:, 3] = sin_pos_l * scale_2
-        self.ref_dof_pos[:, 4] = sin_pos_l * scale_1
+        self.ref_dof_pos[:, 4] = sin_pos_l * scale_3
         # right foot stance phase set to default joint pos
         sin_pos_r[sin_pos_r < 0] = 0
         self.ref_dof_pos[:, 8] = sin_pos_r * scale_1
         self.ref_dof_pos[:, 9] = sin_pos_r * scale_2
-        self.ref_dof_pos[:, 10] = sin_pos_r * scale_1
+        self.ref_dof_pos[:, 10] = sin_pos_r * scale_3
         # Double support phase
         self.ref_dof_pos[torch.abs(sin_pos) < 0.1] = 0
 
@@ -209,7 +214,7 @@ class XBotLFreeEnv(LeggedRobot):
 
         self.command_input = torch.cat(
             (sin_pos, cos_pos, self.commands[:, :3] * self.commands_scale), dim=1)
-
+        # print("default_joint_pd_target", self.default_dof_pos)
         q = (self.dof_pos - self.default_dof_pos) * self.obs_scales.dof_pos
         dq = self.dof_vel * self.obs_scales.dof_vel
         
@@ -241,10 +246,6 @@ class XBotLFreeEnv(LeggedRobot):
             self.base_ang_vel * self.obs_scales.ang_vel,  # 3
             self.base_euler_xyz * self.obs_scales.quat,  # 3
         ), dim=-1)
-        if 1:
-            # print()
-            print("action", self.actions[0])
-            self.flag=0
         # print("command_input", self.command_input[0])
         # print("ang_vel", self.base_ang_vel[0])
         # print("euler_xyz", self.base_euler_xyz[0])
@@ -289,7 +290,8 @@ class XBotLFreeEnv(LeggedRobot):
         Calculates the reward based on the distance between the feet. Penalize feet get close to each other or too far away.
         """
         foot_pos = self.rigid_state[:, self.feet_indices, :2]
-        foot_dist = torch.norm(foot_pos[:, 0, :] - foot_pos[:, 1, :], dim=1)
+        foot_dist = torch.norm(foot_pos[:, 0, 1:2] - foot_pos[:, 1, 1:2], dim=1)
+        # print("foot_dist", foot_dist)
         fd = self.cfg.rewards.min_dist
         max_df = self.cfg.rewards.max_dist
         d_min = torch.clamp(foot_dist - fd, -0.5, 0.)
@@ -438,6 +440,7 @@ class XBotLFreeEnv(LeggedRobot):
         """
         lin_vel_error = torch.sum(torch.square(
             self.commands[:, :2] - self.base_lin_vel[:, :2]), dim=1)
+        # print("base lin vel", self.base_lin_vel[0:, :2])
         return torch.exp(-lin_vel_error * self.cfg.rewards.tracking_sigma)
 
     def _reward_tracking_ang_vel(self):
@@ -457,9 +460,10 @@ class XBotLFreeEnv(LeggedRobot):
         """
         # Compute feet contact mask
         contact = self.contact_forces[:, self.feet_indices, 2] > 1.
-
-        # Get the z-position of the feet and compute the change in z-position
-        feet_z = self.rigid_state[:, self.feet_indices, 2] 
+        feet_z = self.rigid_state[:, self.feet_indices, 2]
+        # print("feet_z", feet_z) 
+        # pos_error = torch.square(feet_z - self.cfg.rewards.target_feet_height) * ~contact
+        # # Get the z-position of the feet and compute the change in z-position
         delta_z = feet_z - self.last_feet_z
         self.feet_height += delta_z
         self.last_feet_z = feet_z

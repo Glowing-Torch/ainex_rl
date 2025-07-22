@@ -342,7 +342,7 @@ class LeggedRobot(BaseTask):
             self.commands[env_ids, 2] = torch_rand_float(self.command_ranges["ang_vel_yaw"][0], self.command_ranges["ang_vel_yaw"][1], (len(env_ids), 1), device=self.device).squeeze(1)
 
         # set small commands to zero
-        self.commands[env_ids, :2] *= (torch.norm(self.commands[env_ids, :2], dim=1) > 0.2).unsqueeze(1)
+        # self.commands[env_ids, :2] *= (torch.norm(self.commands[env_ids, :2], dim=1) > 0.2).unsqueeze(1)
 
 
 
@@ -364,6 +364,7 @@ class LeggedRobot(BaseTask):
         d_gains = self.d_gains
         torques = p_gains * (actions_scaled + self.default_dof_pos - self.dof_pos) - d_gains * self.dof_vel
         # print("torques", torch.clip(torques, -self.torque_limits, self.torque_limits))
+        
         return torch.clip(torques, -self.torque_limits, self.torque_limits)
 
     

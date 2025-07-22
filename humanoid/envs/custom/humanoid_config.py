@@ -105,26 +105,26 @@ class XBotLCfg(LeggedRobotCfg):
         pos = [0.0, 0.0, 0.3]
 
         default_joint_angles = {  # = target angles [rad] when action = 0.0
-            'l_hip_yaw': 0.,
+            'l_hip_yaw': 0.0,
             'l_hip_roll': 0.,
-            'l_hip_pitch': 0.,
-            'l_knee': 0.,
-            'l_ank_pitch': 0.,
+            'l_hip_pitch': -0.293,
+            'l_knee': 0.376,
+            'l_ank_pitch': 0.0836,
             'l_ank_roll': 0.,
             'r_hip_yaw': 0.,
             'r_hip_roll': 0.,
-            'r_hip_pitch': 0.,
-            'r_knee': 0.,
-            'r_ank_pitch': 0.,
+            'r_hip_pitch': 0.293,
+            'r_knee': -0.376,
+            'r_ank_pitch': -0.0836,
             'r_ank_roll': 0.,
         }
 
     class control(LeggedRobotCfg.control):
         # PD Drive parameters:
         stiffness = {'hip_roll': 6.0, 'hip_pitch':4.0, 'hip_yaw': 4.0,
-                     'knee': 4.0, 'ank': 2.0}
+                     'knee': 4.0, 'ank_pitch': 2.0, 'ank_roll': 2.0}
         damping = {'hip_roll': 0.1, 'hip_pitch': 0.1, 'hip_yaw':
-                   0.1, 'knee': 0.1, 'ank': 0.1}
+                   0.1, 'knee': 0.1, 'ank_pitch': 0.3, 'ank_roll': 0.1}
 
         # action scale: target angle = actionScale * action + defaultAngle
         action_scale = 0.25
@@ -166,23 +166,24 @@ class XBotLCfg(LeggedRobotCfg):
     class commands(LeggedRobotCfg.commands):
         # Vers: lin_vel_x, lin_vel_y, ang_vel_yaw, heading (in heading mode ang_vel_yaw is recomputed from heading error)
         num_commands = 4
-        resampling_time = 8.  # time before command are changed[s]
+        resampling_time = 12.  # time before command are changed[s]
         heading_command = True  # if true: compute ang vel command from heading error
 
         class ranges:
-            lin_vel_x = [-0.3, 0.6]   # min max [m/s]
-            lin_vel_y = [-0.3, 0.3]   # min max [m/s]
+            lin_vel_x = [0, 0.5]   # min max [m/s]
+            lin_vel_y = [0, 0.]   # min max [m/s]
             ang_vel_yaw = [-0.3, 0.3] # min max [rad/s]
             heading = [-3.14, 3.14]
 
     class rewards:
         base_height_target = 0.2
         min_dist = 0.06  #TODO larger
-        max_dist = 0.24
+        max_dist = 0.14
         # put some settings here for LLM parameter tuning
         target_joint_pos_scale = 0.17    # rad
         target_feet_height = 0.06        # m
-        cycle_time = 0.64                # sec
+        cycle_time = 0.5               # sec
+        # cycle_time=0.25
         # if true negative total rewards are clipped at zero (avoids early termination problems)
         only_positive_rewards = True
         # tracking reward = exp(error*sigma)
@@ -194,7 +195,7 @@ class XBotLCfg(LeggedRobotCfg):
             feet_clearance = 1.
             feet_contact_number = 1.2
             # gait
-            feet_air_time = 1.
+            feet_air_time = 0.01
             foot_slip = -0.05
             feet_distance = 0.2
             knee_distance = 0.2

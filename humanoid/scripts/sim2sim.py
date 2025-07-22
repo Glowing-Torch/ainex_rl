@@ -30,7 +30,8 @@
 
 import math
 import numpy as np
-import mujoco
+import mujoco, mujoco_viewer
+from tqdm import tqdm
 import mujoco.viewer
 from collections import deque
 from scipy.spatial.transform import Rotation as R
@@ -73,6 +74,9 @@ def get_obs(data):
     
     q = data.qpos.astype(np.double)[7:19]
     dq = data.qvel.astype(np.double)[6:18]
+    # q=data.sensordata[0:12].astype(np.double)
+    # dq=data.sensordata[12:24].astype(np.double)
+    # print("diff", q-q_s)
     quat = data.sensor('orientation').data[[1, 2, 3, 0]].astype(np.double)
     omega = data.sensor('angular-velocity').data.astype(np.double)
     return (q, dq, quat, omega)
@@ -97,44 +101,46 @@ def run_mujoco(policy, cfg):
         None
     """
     model = mujoco.MjModel.from_xml_path(cfg.sim_config.mujoco_model_path)
-    joint_names = []
     data = mujoco.MjData(model)
-    for i in range(model.njnt):
-        name = mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_JOINT, i)
-        index = model.jnt_qposadr[i]
-        print(f"{name}: qpos[{index}] = {data.qpos[index]}")
     model.opt.timestep = cfg.sim_config.dt
-    viewer = mujoco.viewer.launch_passive(model, data)
-    # print("qpos size:", model.nq)
-    # print("qpos names & order:")
-    # for i in range(model.njnt):
-    #     print(f"{i}: {model.joint_names[i].decode('utf-8')} - type: {model.jnt_type[i]}")
+    mujoco.mj_step(model, data)
+    viewer = mujoco_viewer.MujocoViewer(model, data)
 
     target_q = np.zeros((cfg.env.num_actions), dtype=np.double)
     action = np.zeros((cfg.env.num_actions), dtype=np.double)
-
+    default_joint_pos = np.array([0,0,-0.293,0.376,0.0836,0,
+                                 0,0, 0.293, -0.376,-0.0836,0])
+    # default_joint_pos = np.zeros((cfg.env.num_actions), dtype=np.double)
     hist_obs = deque()
     for _ in range(cfg.env.frame_stack):
         hist_obs.append(np.zeros([1, cfg.env.num_single_obs], dtype=np.double))
 
     count_lowlevel = 0
+    # 所有质量乘以各自质心位置加权平均
+    total_mass = 0.0
+    com = np.zeros(3)
 
+    for i in range(model.nbody):
+        mass = model.body_mass[i]
+        pos = data.subtree_com[i]
+        com += mass * pos
+        total_mass += mass
 
-    while viewer.is_running():
+    com /= total_mass
+    print("Whole-body Center of Mass:", com)
+    for _ in tqdm(range(int(cfg.sim_config.sim_duration / cfg.sim_config.dt)), desc="Simulating..."):
         step_start=time.time()
 
         # Obtain an observation
         q, dq, quat, omega = get_obs(data)
-        # print("q", q)
-        # print("dq", dq)
         # 1000hz -> 100hz
         if count_lowlevel % cfg.sim_config.decimation == 0:
             obs = np.zeros([1, cfg.env.num_single_obs], dtype=np.float32)
             eu_ang = quaternion_to_euler_array(quat)
             eu_ang[eu_ang > math.pi] -= 2 * math.pi
 
-            obs[0, 0] = math.sin(2 * math.pi * count_lowlevel * cfg.sim_config.dt / 0.64)
-            obs[0, 1] = math.cos(2 * math.pi * count_lowlevel * cfg.sim_config.dt / 0.64)
+            obs[0, 0] = math.sin(2 * math.pi * count_lowlevel * cfg.sim_config.dt / 0.5)
+            obs[0, 1] = math.cos(2 * math.pi * count_lowlevel * cfg.sim_config.dt / 0.5)
             obs[0, 2] = cmd.vx * cfg.normalization.obs_scales.lin_vel
             obs[0, 3] = cmd.vy * cfg.normalization.obs_scales.lin_vel
             obs[0, 4] = cmd.dyaw * cfg.normalization.obs_scales.ang_vel
@@ -152,7 +158,7 @@ def run_mujoco(policy, cfg):
             with torch.no_grad():
                 action[:] = policy(torch.tensor(policy_input))[0].detach().numpy()
             action = np.clip(action, -cfg.normalization.clip_actions, cfg.normalization.clip_actions)
-            target_q = action * cfg.control.action_scale
+            target_q = action * cfg.control.action_scale + default_joint_pos
 
         target_dq = np.zeros((cfg.env.num_actions), dtype=np.double)
         # Generate PD control
@@ -161,12 +167,12 @@ def run_mujoco(policy, cfg):
         tau = np.clip(tau, -cfg.robot_config.tau_limit, cfg.robot_config.tau_limit)  # Clamp torques
         data.ctrl = tau
 
-        count_lowlevel += 1
         mujoco.mj_step(model, data)
-        viewer.sync()
-        time_until_next_step = model.opt.timestep - (time.time() - step_start)
-        if time_until_next_step > 0:
-            time.sleep(time_until_next_step)
+        viewer.render()
+        count_lowlevel += 1
+        # time_until_next_step = model.opt.timestep - (time.time() - step_start)
+        # if time_until_next_step > 0:
+        #     time.sleep(time_until_next_step)
     viewer.close()
 
 
@@ -183,18 +189,18 @@ if __name__ == '__main__':
     class Sim2simCfg(XBotLCfg):
 
         class sim_config:
-            if 0:
-                mujoco_model_path = f'{LEGGED_GYM_ROOT_DIR}/resources/robots/XBot/mjcf/XBot-L-terrain.xml'
-            else:
-                mujoco_model_path = f'{LEGGED_GYM_ROOT_DIR}/resources/robots/ainex_description/mjcf/ainex.xml'
+            mujoco_model_path = f'{LEGGED_GYM_ROOT_DIR}/resources/robots/ainex_description/mjcf/ainex.xml'
             sim_duration = 60.0
             dt = 0.001
             decimation = 10
 
         class robot_config:
-            kps = 2*np.array([4, 6, 4, 4, 2, 2, 4, 6, 4, 4, 2, 2], dtype=np.double)
-            kds = np.array([0.1]*12, dtype=np.double)
-            tau_limit = 6. * np.ones(12, dtype=np.double)
+            kps = np.array([4, 6, 4, 4, 2, 2,
+                            4, 6, 4, 4, 2, 2], dtype=np.double)
+            kds = np.array([0.1,0.1,0.1,0.1, 0.3,0.1, 
+                            0.1,0.1,0.1,0.1, 0.3,0.1], dtype=np.double)
+
+            tau_limit = 6 * np.ones(12, dtype=np.double)
 
     policy = torch.jit.load(args.load_model)
     # policy.eval()
