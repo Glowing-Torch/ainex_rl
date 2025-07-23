@@ -73,7 +73,7 @@ class XBotLCfg(LeggedRobotCfg):
         fix_base_link = False
 
     class terrain(LeggedRobotCfg.terrain):
-        mesh_type = 'plane'
+        mesh_type = 'plane'  # terrain type: 'plane' or 'trimesh'. Use 'trimesh' for custom terrains.
         # mesh_type = 'trimesh'
         curriculum = False
         # rough terrain only:
@@ -129,10 +129,10 @@ class XBotLCfg(LeggedRobotCfg):
         # action scale: target angle = actionScale * action + defaultAngle
         action_scale = 0.25
         # decimation: Number of control action updates @ sim DT per policy DT
-        decimation = 10  # 100hz policy update frequency min:30hz
+        decimation = 10  #Policy update frequency   TODO: 10~100
 
     class sim(LeggedRobotCfg.sim):
-        dt = 0.001  # 1000 Hz control frequency min:100Hz
+        dt = 0.001  # MOTOR control frequency   TODO: 0.001~0.01
         substeps = 1
         up_axis = 1  # 0 is y, 1 is z
 
@@ -151,10 +151,10 @@ class XBotLCfg(LeggedRobotCfg):
             contact_collection = 2
 
     class domain_rand:
-        randomize_friction = False
+        randomize_friction = False 
         friction_range = [0.5, 1.5]
         randomize_base_mass = False
-        added_mass_range = [-0.5, 3.]
+        added_mass_range = [0, 1.5]
         push_robots = False
         push_interval_s = 4
         max_push_vel_xy = 0.2
@@ -170,14 +170,14 @@ class XBotLCfg(LeggedRobotCfg):
         heading_command = True  # if true: compute ang vel command from heading error
 
         class ranges:
-            lin_vel_x = [0, 0.5]   # min max [m/s]
-            lin_vel_y = [0, 0.]   # min max [m/s]
-            ang_vel_yaw = [-0.3, 0.3] # min max [rad/s]
+            lin_vel_x = [-0.3, 0.6]   # min max [m/s]  #TODO: [-0.3,0.6]
+            lin_vel_y = [-0.3, 0.3]   # min max [m/s]           #TODO: [-0.3,0.3]
+            ang_vel_yaw = [-0.3, 0.3] # min max [rad/s] 
             heading = [-3.14, 3.14]
 
     class rewards:
         base_height_target = 0.2
-        min_dist = 0.06  #TODO larger
+        min_dist = 0.06  
         max_dist = 0.14
         # put some settings here for LLM parameter tuning
         target_joint_pos_scale = 0.17    # rad
