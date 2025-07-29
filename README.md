@@ -24,7 +24,7 @@ Our code is built on top of the repository: [Humanoid-Gym](https://github.com/ro
 # Under the directory humanoid-gym/humanoid
 # Launching PPO Policy Training for 'v1' 
 # This command initiates the PPO algorithm-based training for the humanoid task.
-python scripts/train.py --run_name v1 --headless 
+python humanoid/scripts/train.py --run_name v1 --headless 
 
 # Evaluating the Trained PPO Policy 'v1'
 # This command loads the 'v1' policy for performance assessment in its environment. 
