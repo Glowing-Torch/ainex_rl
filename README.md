@@ -1,5 +1,5 @@
 
-## Installation
+# Installation
 Our code is built on top of the repository: [Humanoid-Gym](https://github.com/roboterax/humanoid-gym).
 
 1. Generate a new Python virtual environment with Python 3.8 using `conda create -n humanoid python=3.8`.
@@ -16,10 +16,10 @@ Our code is built on top of the repository: [Humanoid-Gym](https://github.com/ro
    - Clone this repository.
    - `cd humanoid-gym && pip install -e .`
 
-## Usage Guide
+# Usage Guide
 
-#### Examples
-
+## Examples
+### 1. Train and Play
 ```bash
 # Under the directory humanoid-gym/humanoid
 # Launching PPO Policy Training for 'v1' 
@@ -34,7 +34,7 @@ python humanoid/scripts/play.py --load_run log_file_path --name run_name
 python humanoid/scripts/play.py --load_run Jul21_15-20-32_omniverse_edit_urdf --run_name omniverse_edit_urdf 
 ```
 
-#### 3. Sim-to-sim
+### 2. Sim-to-sim
 - **Please note: Before initiating the sim-to-sim process, ensure that you run `play.py` to export a JIT policy.**
 - **Mujoco-based Sim2Sim Deployment**: Utilize Mujoco for executing simulation-to-simulation (sim2sim) deployments with the command below:
 ```bash
@@ -43,7 +43,7 @@ python scripts/sim2sim.py --load_model policy_1.pt
 python scripts/sim2sim.py --load_model dt0.001_addnoise.pt
 ```
 
-#### 4. Xbox-Controller
+### 3. Xbox-Controller
 The Mujoco Simulator is integerated into ROS2's framework using Xbox's input as commands.
 ```bash
 colcon build --packages-select deploy_sim
