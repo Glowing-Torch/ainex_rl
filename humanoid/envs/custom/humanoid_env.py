@@ -327,7 +327,7 @@ class XBotLFreeEnv(LeggedRobot):
     def _reward_feet_air_time(self):
         """
         Calculates the reward for feet air time, promoting longer steps. This is achieved by
-        checking the first contact with the ground after being in the air. The air time is
+        checking the first contaactionsct with the ground after being in the air. The air time is
         limited to a maximum value for reward calculation.
         """
         contact = self.contact_forces[:, self.feet_indices, 2] > 1.

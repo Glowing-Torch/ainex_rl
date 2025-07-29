@@ -101,6 +101,7 @@ class MujocoSimulator(Node):
                 linear_x, linear_y =self.cmd_sub.get_left_stick()
                 angular_z = self.cmd_sub.get_right_stick()
                 cmd=np.array([linear_x, linear_y, angular_z], dtype=np.float32)
+                cmd=np.clip(cmd, -0.3, 0.6)
             if count_lowlevel % self.cfg.sim_config.decimation == 0:
                 obs = np.zeros([1, self.cfg.env.num_single_obs], dtype=np.float32)
                 eu_ang = quaternion_to_euler_array(quat)

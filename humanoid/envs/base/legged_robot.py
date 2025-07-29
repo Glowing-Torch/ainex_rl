@@ -363,6 +363,7 @@ class LeggedRobot(BaseTask):
         p_gains = self.p_gains
         d_gains = self.d_gains
         torques = p_gains * (actions_scaled + self.default_dof_pos - self.dof_pos) - d_gains * self.dof_vel
+        # target_pos= actions_scaled + self.default_dof_pos
         # print("torques", torch.clip(torques, -self.torque_limits, self.torque_limits))
         
         return torch.clip(torques, -self.torque_limits, self.torque_limits)
