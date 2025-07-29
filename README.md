@@ -12,7 +12,7 @@ Our code is built on top of the repository: [Humanoid-Gym](https://github.com/ro
    - `cd isaacgym/python && pip install -e .`
    - Run an example with `cd examples && python 1080_balls_of_solitude.py`.
    - Consult `isaacgym/docs/index.html` for troubleshooting.
-6. Install humanoid-gym:
+6. Install ainex_rl:
    - Clone this repository.
    - `cd ainex_rl && pip install -e .`
 
@@ -21,7 +21,7 @@ Our code is built on top of the repository: [Humanoid-Gym](https://github.com/ro
 ## Examples
 ### 1. Train and Play
 ```bash
-# Under the directory humanoid-gym/humanoid
+# Under the directory ainex_rl/humanoid
 # Launching PPO Policy Training for 'v1' 
 # This command initiates the PPO algorithm-based training for the humanoid task.
 python humanoid/scripts/train.py --run_name v1 --headless 
