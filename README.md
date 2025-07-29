@@ -1,7 +1,7 @@
 # Collaborators:
-- @Glowing-Torch: Jiabao Song
-- @leochenly: Liangyu Chen
-- @yan9900: Chenyan Liu
+- [@Glowing-Torch](https://github.com/Glowing-Torch) Jiabao Song
+- [@leochenly](https://github.com/leochenly) Liangyu Chen
+- [@yan9900](https://github.com/yan9900) Chenyan Liu
 # Installation
 Our code is built on top of the repository: [Humanoid-Gym](https://github.com/roboterax/humanoid-gym).
 
