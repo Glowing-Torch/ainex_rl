@@ -14,7 +14,7 @@ Our code is built on top of the repository: [Humanoid-Gym](https://github.com/ro
    - Consult `isaacgym/docs/index.html` for troubleshooting.
 6. Install humanoid-gym:
    - Clone this repository.
-   - `cd humanoid-gym && pip install -e .`
+   - `cd ainex_rl && pip install -e .`
 
 # Usage Guide
 
