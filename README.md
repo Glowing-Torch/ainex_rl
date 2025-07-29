@@ -38,9 +38,9 @@ python humanoid/scripts/play.py --load_run Jul21_15-20-32_omniverse_edit_urdf --
 - **Please note: Before initiating the sim-to-sim process, ensure that you run `play.py` to export a JIT policy.**
 - **Mujoco-based Sim2Sim Deployment**: Utilize Mujoco for executing simulation-to-simulation (sim2sim) deployments with the command below:
 ```bash
-python scripts/sim2sim.py --load_model policy_1.pt
+python humanoid/scripts/sim2sim.py --load_model policy_1.pt
 # Run our trained policy
-python scripts/sim2sim.py --load_model dt0.001_addnoise.pt
+python humanoid/scripts/sim2sim.py --load_model dt0.001_addnoise.pt
 ```
 
 ### 3. Xbox-Controller
